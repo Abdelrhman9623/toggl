@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider.value(value: Auth()),
           ChangeNotifierProxyProvider<Auth, TimeEntriesHandler>(
             create: null,
-            update: (context, auth, _) => TimeEntriesHandler(token: auth.token),
+            update: (context, auth, oldData) => TimeEntriesHandler(
+                auth.token, oldData == null ? [] : oldData.timeEntries),
           )
         ],
         child: LayoutBuilder(
