@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:toggl/models/timeEntriesModule.dart';
 import 'package:toggl/screens/timeDetails.dart';
-import 'package:toggl/services/auth.dart';
 import 'package:toggl/services/timeEntries.dart';
 import 'package:intl/intl.dart';
-import 'package:grouped_list/grouped_list.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -15,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var total = 0;
   @override
   Widget build(BuildContext context) {
     final items = Provider.of<TimeEntriesHandler>(context, listen: false);
@@ -39,13 +37,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Container(
                           margin: EdgeInsets.all(10),
-                          child: Text(
-                            DateFormat.EEEE().format(
-                                DateTime.parse(items.data.keys.toList()[i])),
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                DateFormat.MMMEd().format(DateTime.parse(
+                                    items.data.keys.toList()[i])),
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                DateFormat.ms().format(
+                                    DateTime.fromMillisecondsSinceEpoch(total)),
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           )),
                       ListView.builder(
                           shrinkWrap: true,
@@ -53,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: items.data.values.toList()[i].length,
                           // ignore: missing_return
                           itemBuilder: (context, j) {
+                            total +=
+                                items.data.values.toList()[i][j]['duration'];
                             return GestureDetector(
                               onTap: () => Navigator.of(context).pushNamed(
                                   DetailseScreen.routeName,

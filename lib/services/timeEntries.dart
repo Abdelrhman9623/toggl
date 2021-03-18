@@ -76,7 +76,6 @@ class TimeEntriesHandler extends ChangeNotifier {
       await http.UrlHelper.getRequest(
               http.UrlHelper.url('projects/$id'), http.UrlHelper.header(token))
           .then((value) {
-        List<ProjectDetails> _loadedprojects = [];
         if (value == 401 || value == 403 || value == 404) {
           print(value);
           throw HttpException('Not found time Hostory');
